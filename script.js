@@ -3,6 +3,14 @@ let currentYear = new Date().getFullYear();
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 let selectedDayElement = null;
 
+const colors = {
+    green: '#0EAD00',
+    orange: '#FFA500',
+    red: '#E61919',
+    grey: '#444444',
+    none: '' // For resetting the color
+};
+
 document.getElementById('prev-four-months').addEventListener('click', () => {
     changeMonths(-4);
 });
@@ -16,6 +24,12 @@ document.getElementById('save-day').addEventListener('click', saveDaySettings);
 function generateCalendar(month, year) {
     const monthsContainer = document.getElementById('months-container');
     monthsContainer.innerHTML = ''; // Clear previous months
+
+    // Get current date for comparison
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
 
     for (let i = 0; i < 4; i++) {
         let adjustedYear = month + i >= 12 ? year + Math.floor((month + i) / 12) : year;
@@ -33,26 +47,43 @@ function generateCalendar(month, year) {
         daysContainer.className = 'calendar-grid';
         monthContainer.appendChild(daysContainer);
 
+        // Determine the first day of the month
+        let firstDayOfMonth = new Date(adjustedYear, adjustedMonth, 1).getDay();
+        firstDayOfMonth = firstDayOfMonth === 0 ? 7 : firstDayOfMonth; // Adjust if first day is Sunday (0)
+
+        // Add empty divs for days before the first day of the month
+        for (let j = 1; j < firstDayOfMonth; j++) {
+            let emptyDay = document.createElement('div');
+            daysContainer.appendChild(emptyDay);
+        }
+
         let daysInMonth = new Date(adjustedYear, adjustedMonth + 1, 0).getDate();
 
         for (let day = 1; day <= daysInMonth; day++) {
             let dayElement = document.createElement('div');
             dayElement.innerText = day;
+            dayElement.dataset.day = day;
+            dayElement.dataset.month = adjustedMonth;
+            dayElement.dataset.year = adjustedYear;
             daysContainer.appendChild(dayElement);
 
             dayElement.addEventListener('click', () => dayClicked(dayElement, day, adjustedMonth, adjustedYear));
 
-            // Load saved data for each day
-            let savedDate = `${adjustedYear}-${adjustedMonth + 1}-${day}`;
+            let savedDate = formatSelectedDate(day, adjustedMonth, adjustedYear);
             let dayData = JSON.parse(localStorage.getItem(savedDate));
             if (dayData) {
-                dayElement.style.backgroundColor = dayData.color;
+                dayElement.style.backgroundColor = colors[dayData.color];
+            }
+
+            if (day === currentDay && adjustedMonth === currentMonth && adjustedYear === currentYear) {
+                dayElement.classList.add('current-day');
             }
         }
 
         monthsContainer.appendChild(monthContainer);
     }
 }
+
 
 function changeMonths(step) {
     currentMonth += step;
@@ -72,30 +103,43 @@ function changeMonths(step) {
 
 function dayClicked(dayElement, day, month, year) {
     if (selectedDayElement) {
-        selectedDayElement.classList.remove('selected');
+        selectedDayElement.classList.remove('selected-day');
     }
-    dayElement.classList.add('selected');
+
+    dayElement.classList.add('selected-day');
     selectedDayElement = dayElement;
 
-    document.getElementById('selected-day').innerText = `Selected Day: ${year}-${month + 1}-${day}`;
-    loadDaySettings(`${year}-${month + 1}-${day}`);
+    const formattedDate = `${day}. ${monthNames[month]} ${year}`;
+    document.getElementById('selected-day').innerText = `Selected Day: ${formattedDate}`;
+
+    const selectedDate = formatSelectedDate(day, month, year);
+    loadDaySettings(selectedDate);
+}
+
+function formatSelectedDate(day, month, year) {
+    month = parseInt(month) + 1; // Adjusting month for 1-indexed format
+    month = month.toString().padStart(2, '0');
+    day = day.toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 function saveDaySettings() {
     if (!selectedDayElement) return;
 
-    const selectedDate = document.getElementById('selected-day').innerText.split(': ')[1];
-    const color = document.getElementById('day-color').value;
+    const selectedDate = formatSelectedDate(
+        selectedDayElement.dataset.day,
+        selectedDayElement.dataset.month,
+        selectedDayElement.dataset.year
+    );
+    const colorValue = document.getElementById('day-color').value;
     const notes = document.getElementById('day-notes').value;
 
-    // Handle the "None" option
-    if (color === "none") {
-        selectedDayElement.style.backgroundColor = ''; // Reset to default or transparent
-        // Optionally, you can remove the item from localStorage if you don't want to keep the record
+    selectedDayElement.style.backgroundColor = colors[colorValue];
+
+    if (colorValue === "none") {
         localStorage.removeItem(selectedDate);
     } else {
-        selectedDayElement.style.backgroundColor = color;
-        localStorage.setItem(selectedDate, JSON.stringify({ color, notes }));
+        localStorage.setItem(selectedDate, JSON.stringify({ color: colorValue, notes }));
     }
 }
 
@@ -104,9 +148,9 @@ function loadDaySettings(date) {
     if (dayData) {
         document.getElementById('day-color').value = dayData.color;
         document.getElementById('day-notes').value = dayData.notes;
-        selectedDayElement.style.backgroundColor = dayData.color;
+        selectedDayElement.style.backgroundColor = colors[dayData.color];
     } else {
-        document.getElementById('day-color').value = 'green'; // default color
+        document.getElementById('day-color').value = 'none';
         document.getElementById('day-notes').value = '';
         selectedDayElement.style.backgroundColor = '';
     }
