@@ -3,6 +3,14 @@ let currentYear = new Date().getFullYear();
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 let selectedDayElement = null;
 
+const colors = {
+    green: '#8FBC8F', // Example color, replace with your desired color code
+    orange: '#FFA500', // Example color, replace with your desired color code
+    red: '#E61919',    // Example color, replace with your desired color code
+    grey: '#D3D3D3',   // Example color, replace with your desired color code
+    none: ''           // For resetting the color
+};
+
 document.getElementById('prev-four-months').addEventListener('click', () => {
     changeMonths(-4);
 });
@@ -85,18 +93,13 @@ function saveDaySettings() {
     if (!selectedDayElement) return;
 
     const selectedDate = document.getElementById('selected-day').innerText.split(': ')[1];
-    const color = document.getElementById('day-color').value;
+    const colorValue = document.getElementById('day-color').value;
+    const color = colors[colorValue]; // Use the color variable
     const notes = document.getElementById('day-notes').value;
 
-    // Handle the "None" option
-    if (color === "none") {
-        selectedDayElement.style.backgroundColor = ''; // Reset to default or transparent
-        // Optionally, you can remove the item from localStorage if you don't want to keep the record
-        localStorage.removeItem(selectedDate);
-    } else {
-        selectedDayElement.style.backgroundColor = color;
-        localStorage.setItem(selectedDate, JSON.stringify({ color, notes }));
-    }
+    selectedDayElement.style.backgroundColor = color;
+
+    localStorage.setItem(selectedDate, JSON.stringify({ color: colorValue, notes }));
 }
 
 function loadDaySettings(date) {
@@ -104,11 +107,11 @@ function loadDaySettings(date) {
     if (dayData) {
         document.getElementById('day-color').value = dayData.color;
         document.getElementById('day-notes').value = dayData.notes;
-        selectedDayElement.style.backgroundColor = dayData.color;
+        selectedDayElement.style.backgroundColor = colors[dayData.color];
     } else {
-        document.getElementById('day-color').value = 'green'; // default color
+        document.getElementById('day-color').value = 'none'; // default to 'none'
         document.getElementById('day-notes').value = '';
-        selectedDayElement.style.backgroundColor = '';
+        selectedDayElement.style.backgroundColor = colors['none'];
     }
 }
 

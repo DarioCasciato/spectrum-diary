@@ -1,103 +1,88 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
 }
 
 #calendar {
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
-#calendar-nav {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+#calendar #calendar-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
-
-#calendar-nav button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
+#calendar #calendar-nav button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
 }
-
-#calendar-nav button:hover {
-    background-color: #0056b3;
+#calendar #calendar-nav button:hover {
+  background-color: #0056b3;
 }
-
-#months-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+#calendar #months-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
-
-.month {
-    background-color: #fff;
-    border: 1px solid #ddd;
+#calendar .month {
+  background-color: #fff;
+  border: 1px solid #ddd;
 }
-
-.month-header {
-    background-color: #f3f3f3;
-    padding: 10px;
-    font-weight: bold;
-    text-align: center;
+#calendar .month .month-header {
+  background-color: #f3f3f3;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
 }
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+#calendar .month .calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
 }
-
-.calendar-grid div {
-    padding: 10px;
-    border: 1px solid #ddd;
-    cursor: pointer;
-    text-align: center;
+#calendar .month .calendar-grid div {
+  padding: 10px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  text-align: center;
 }
-
-.calendar-grid div:hover {
-    background-color: #f3f3f3;
+#calendar .month .calendar-grid div:hover {
+  background-color: #f3f3f3;
 }
 
 #day-settings {
-    margin-top: 30px;
-    text-align: center;
+  margin-top: 30px;
+  text-align: center;
 }
-
 #day-settings h3 {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
-
 #day-settings div {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
-
 #day-settings label {
-    margin-right: 10px;
+  margin-right: 10px;
 }
-
 #day-settings select, #day-settings textarea {
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
-
-#save-day {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
+#day-settings #save-day {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
 }
-
-#save-day:hover {
-    background-color: #218838;
-}
+#day-settings #save-day:hover {
+  background-color: #218838;
+}/*# sourceMappingURL=style.css.map */
