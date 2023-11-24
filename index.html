@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum Diary</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="calendar">
+        <div id="months-container">
+            <!-- Four month containers will be here -->
+        </div>
+        <div id="calendar-nav">
+            <button id="prev-four-months">&lt;&lt;</button>
+            <button id="next-four-months">&gt;&gt;</button>
+        </div>
+        <div id="day-settings">
+            <h3>Day Settings</h3>
+            <div id="selected-day">Selected Day: None</div>
+            <div>
+                <label for="day-color">Color:</label>
+                <select id="day-color">
+                    <option value="green">Green</option>
+                    <option value="orange">Orange</option>
+                    <option value="red">Red</option>
+                    <option value="grey">Grey</option>
+                    <option value="none">None</option>
+                </select>
+            </div>
+            <div>
+                <label for="day-notes">Notes:</label>
+                <textarea id="day-notes" rows="3"></textarea>
+            </div>
+            <button id="save-day">Save</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
