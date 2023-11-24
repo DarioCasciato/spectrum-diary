@@ -4,11 +4,11 @@ const monthNames = ["January", "February", "March", "April", "May", "June", "Jul
 let selectedDayElement = null;
 
 const colors = {
-    green: '#8FBC8F', // Example color, replace with your desired color code
-    orange: '#FFA500', // Example color, replace with your desired color code
-    red: '#E61919',    // Example color, replace with your desired color code
-    grey: '#D3D3D3',   // Example color, replace with your desired color code
-    none: ''           // For resetting the color
+    green: '#0EAD00',
+    orange: '#FFA500',
+    red: '#E61919',
+    grey: '#444444',
+    none: '' // For resetting the color
 };
 
 document.getElementById('prev-four-months').addEventListener('click', () => {
@@ -24,6 +24,11 @@ document.getElementById('save-day').addEventListener('click', saveDaySettings);
 function generateCalendar(month, year) {
     const monthsContainer = document.getElementById('months-container');
     monthsContainer.innerHTML = ''; // Clear previous months
+
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
 
     for (let i = 0; i < 4; i++) {
         let adjustedYear = month + i >= 12 ? year + Math.floor((month + i) / 12) : year;
@@ -46,15 +51,21 @@ function generateCalendar(month, year) {
         for (let day = 1; day <= daysInMonth; day++) {
             let dayElement = document.createElement('div');
             dayElement.innerText = day;
+            dayElement.dataset.day = day;
+            dayElement.dataset.month = adjustedMonth;
+            dayElement.dataset.year = adjustedYear;
             daysContainer.appendChild(dayElement);
 
             dayElement.addEventListener('click', () => dayClicked(dayElement, day, adjustedMonth, adjustedYear));
 
-            // Load saved data for each day
-            let savedDate = `${adjustedYear}-${adjustedMonth + 1}-${day}`;
+            let savedDate = formatSelectedDate(day, adjustedMonth, adjustedYear);
             let dayData = JSON.parse(localStorage.getItem(savedDate));
             if (dayData) {
-                dayElement.style.backgroundColor = dayData.color;
+                dayElement.style.backgroundColor = colors[dayData.color];
+            }
+
+            if (day === currentDay && adjustedMonth === currentMonth && adjustedYear === currentYear) {
+                dayElement.classList.add('current-day');
             }
         }
 
@@ -80,26 +91,44 @@ function changeMonths(step) {
 
 function dayClicked(dayElement, day, month, year) {
     if (selectedDayElement) {
-        selectedDayElement.classList.remove('selected');
+        selectedDayElement.classList.remove('selected-day');
     }
-    dayElement.classList.add('selected');
+
+    dayElement.classList.add('selected-day');
     selectedDayElement = dayElement;
 
-    document.getElementById('selected-day').innerText = `Selected Day: ${year}-${month + 1}-${day}`;
-    loadDaySettings(`${year}-${month + 1}-${day}`);
+    const formattedDate = `${day}. ${monthNames[month]} ${year}`;
+    document.getElementById('selected-day').innerText = `Selected Day: ${formattedDate}`;
+
+    const selectedDate = formatSelectedDate(day, month, year);
+    loadDaySettings(selectedDate);
+}
+
+function formatSelectedDate(day, month, year) {
+    month = parseInt(month) + 1; // Adjusting month for 1-indexed format
+    month = month.toString().padStart(2, '0');
+    day = day.toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 function saveDaySettings() {
     if (!selectedDayElement) return;
 
-    const selectedDate = document.getElementById('selected-day').innerText.split(': ')[1];
+    const selectedDate = formatSelectedDate(
+        selectedDayElement.dataset.day,
+        selectedDayElement.dataset.month,
+        selectedDayElement.dataset.year
+    );
     const colorValue = document.getElementById('day-color').value;
-    const color = colors[colorValue]; // Use the color variable
     const notes = document.getElementById('day-notes').value;
 
-    selectedDayElement.style.backgroundColor = color;
+    selectedDayElement.style.backgroundColor = colors[colorValue];
 
-    localStorage.setItem(selectedDate, JSON.stringify({ color: colorValue, notes }));
+    if (colorValue === "none") {
+        localStorage.removeItem(selectedDate);
+    } else {
+        localStorage.setItem(selectedDate, JSON.stringify({ color: colorValue, notes }));
+    }
 }
 
 function loadDaySettings(date) {
@@ -109,9 +138,9 @@ function loadDaySettings(date) {
         document.getElementById('day-notes').value = dayData.notes;
         selectedDayElement.style.backgroundColor = colors[dayData.color];
     } else {
-        document.getElementById('day-color').value = 'none'; // default to 'none'
+        document.getElementById('day-color').value = 'none';
         document.getElementById('day-notes').value = '';
-        selectedDayElement.style.backgroundColor = colors['none'];
+        selectedDayElement.style.backgroundColor = '';
     }
 }
 
