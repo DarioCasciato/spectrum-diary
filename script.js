@@ -25,6 +25,7 @@ function generateCalendar(month, year) {
     const monthsContainer = document.getElementById('months-container');
     monthsContainer.innerHTML = ''; // Clear previous months
 
+    // Get current date for comparison
     const today = new Date();
     const currentDay = today.getDate();
     const currentMonth = today.getMonth();
@@ -45,6 +46,16 @@ function generateCalendar(month, year) {
         let daysContainer = document.createElement('div');
         daysContainer.className = 'calendar-grid';
         monthContainer.appendChild(daysContainer);
+
+        // Determine the first day of the month
+        let firstDayOfMonth = new Date(adjustedYear, adjustedMonth, 1).getDay();
+        firstDayOfMonth = firstDayOfMonth === 0 ? 7 : firstDayOfMonth; // Adjust if first day is Sunday (0)
+
+        // Add empty divs for days before the first day of the month
+        for (let j = 1; j < firstDayOfMonth; j++) {
+            let emptyDay = document.createElement('div');
+            daysContainer.appendChild(emptyDay);
+        }
 
         let daysInMonth = new Date(adjustedYear, adjustedMonth + 1, 0).getDate();
 
@@ -72,6 +83,7 @@ function generateCalendar(month, year) {
         monthsContainer.appendChild(monthContainer);
     }
 }
+
 
 function changeMonths(step) {
     currentMonth += step;
