@@ -156,4 +156,22 @@ function loadDaySettings(date) {
     }
 }
 
-generateCalendar(currentMonth, currentYear);
+
+
+
+const PASSWORD = "MTIzNDU2Nzg=";
+
+window.onload = function() {
+    let userPassword;
+    do {
+        userPassword = prompt("Please enter the Diary password:");
+        const encodedPassword = btoa(userPassword);
+
+        if (encodedPassword === PASSWORD) {
+            generateCalendar(currentMonth, currentYear);
+            break;
+        } else {
+            alert("Incorrect password!");
+        }
+    } while (userPassword !== PASSWORD);
+};
