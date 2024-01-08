@@ -17,6 +17,8 @@ Welcome to Spectrum Diary, a versatile and user-friendly calendar application de
 3. **Navigation:** Effortlessly move through different four-month periods for planning and review.
 4. **Save Your Entries:** Your customization for each day is saved automatically.
 
+5. NOTE: The Password is defined on line 162. It has to be encoded into base64. (encoding is not safe, but its sufficient for its use-case)
+
 ## Installation
 Clone the repository and open `index.html` in your web browser to start organizing your days with Spectrum Diary.
 
